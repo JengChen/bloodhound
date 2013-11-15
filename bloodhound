@@ -1,0 +1,17 @@
+ <VirtualHost *:8080>
+   WSGIDaemonProcess bh_tracker user=apache python-path= /root/apache-bloodhound-0.7/installer/bloodhound/lib/python2.7/site-packages
+   WSGIScriptAlias /bloodhound /root/apache-bloodhound-0.7/installer/bloodhound/site/cgi-bin/trac.wsgi
+   <Directory /root/apache-bloodhound-0.7/installer/bloodhound/site/cgi-bin>
+     WSGIProcessGroup bh_tracker
+     WSGIApplicationGroup %{GLOBAL}
+     Order deny,allow
+     Allow from all
+   </Directory>
+   <LocationMatch "/bloodhound/[^/]+/login">
+     AuthType Digest
+     AuthName "Bloodhound"
+     AuthDigestDomain /bloodhound
+     AuthUserFile /root/apache-bloodhound-0.7/installer/bloodhound/environments/main/bloodhound.htdigest
+     Require valid-user
+   </LocationMatch>
+ </VirtualHost>
